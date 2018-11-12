@@ -2,8 +2,8 @@ package id.hasaneljabir.footballclub.view
 
 import id.hasaneljabir.footballclub.model.Team
 
-interface MainView {
+interface TeamDetailView {
     fun showLoading()
     fun hideLoading()
-    fun showTeamList(data: List<Team>)
+    fun showTeamDetail(data: List<Team>)
 }
