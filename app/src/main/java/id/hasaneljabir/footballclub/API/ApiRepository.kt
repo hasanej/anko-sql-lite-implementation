@@ -1,4 +1,4 @@
-package id.hasaneljabir.footballclub.API
+package id.hasaneljabir.footballclub.api
 
 import java.net.URL
 

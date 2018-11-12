@@ -1,6 +1,6 @@
-package id.hasaneljabir.footballclub.View
+package id.hasaneljabir.footballclub.view
 
-import id.hasaneljabir.footballclub.Model.Team
+import id.hasaneljabir.footballclub.model.Team
 
 interface MainView {
     fun showLoading()

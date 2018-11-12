@@ -1,4 +1,4 @@
-package id.hasaneljabir.footballclub.Model
+package id.hasaneljabir.footballclub.model
 
 import com.google.gson.annotations.SerializedName
 

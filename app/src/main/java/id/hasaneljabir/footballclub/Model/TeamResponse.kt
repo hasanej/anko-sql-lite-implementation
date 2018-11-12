@@ -1,4 +1,4 @@
-package id.hasaneljabir.footballclub.Model
+package id.hasaneljabir.footballclub.model
 
 data class TeamResponse(
     val teams: List<Team>

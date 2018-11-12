@@ -7,7 +7,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.squareup.picasso.Picasso
-import id.hasaneljabir.footballclub.Model.Team
+import id.hasaneljabir.footballclub.model.Team
 import id.hasaneljabir.footballclub.R
 import id.hasaneljabir.footballclub.R.id.team_badge
 import id.hasaneljabir.footballclub.R.id.team_name
