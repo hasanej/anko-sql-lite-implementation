@@ -10,7 +10,7 @@ import android.view.View
 import android.widget.*
 import com.google.gson.Gson
 import id.hasaneljabir.footballclub.API.ApiRepository
-import id.hasaneljabir.footballclub.Adapter.MainAdapter
+import id.hasaneljabir.footballclub.adapter.MainAdapter
 import id.hasaneljabir.footballclub.Model.Team
 import id.hasaneljabir.footballclub.Presenter.MainPresenter
 import id.hasaneljabir.footballclub.R.array.league
