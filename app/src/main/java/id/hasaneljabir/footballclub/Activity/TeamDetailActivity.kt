@@ -14,15 +14,15 @@ import com.google.gson.Gson
 import com.squareup.picasso.Picasso
 import id.hasaneljabir.footballclub.R.color.colorAccent
 import id.hasaneljabir.footballclub.R.color.colorPrimaryText
+import id.hasaneljabir.footballclub.api.ApiRepository
 import id.hasaneljabir.footballclub.model.Team
 import id.hasaneljabir.footballclub.presenter.TeamDetailPresenter
-import org.jetbrains.anko.*
-import org.jetbrains.anko.support.v4.onRefresh
-import org.jetbrains.anko.support.v4.swipeRefreshLayout
-import id.hasaneljabir.footballclub.api.ApiRepository
 import id.hasaneljabir.footballclub.utils.invisible
 import id.hasaneljabir.footballclub.utils.visible
 import id.hasaneljabir.footballclub.view.TeamDetailView
+import org.jetbrains.anko.*
+import org.jetbrains.anko.support.v4.onRefresh
+import org.jetbrains.anko.support.v4.swipeRefreshLayout
 
 class TeamDetailActivity : AppCompatActivity(), TeamDetailView {
     private lateinit var progressBar: ProgressBar
@@ -50,42 +50,44 @@ class TeamDetailActivity : AppCompatActivity(), TeamDetailView {
             backgroundColor = Color.WHITE
 
             swipeRefresh = swipeRefreshLayout {
-                setColorSchemeResources(colorAccent,
+                setColorSchemeResources(
+                    colorAccent,
                     android.R.color.holo_green_light,
                     android.R.color.holo_orange_light,
-                    android.R.color.holo_red_light)
+                    android.R.color.holo_red_light
+                )
 
                 scrollView {
                     isVerticalScrollBarEnabled = false
                     relativeLayout {
                         lparams(width = matchParent, height = wrapContent)
 
-                        linearLayout{
+                        linearLayout {
                             lparams(width = matchParent, height = wrapContent)
                             padding = dip(10)
                             orientation = LinearLayout.VERTICAL
                             gravity = Gravity.CENTER_HORIZONTAL
 
-                            teamBadge =  imageView {}.lparams(height = dip(75))
+                            teamBadge = imageView {}.lparams(height = dip(75))
 
-                            teamName = textView{
+                            teamName = textView {
                                 this.gravity = Gravity.CENTER
                                 textSize = 20f
                                 textColor = ContextCompat.getColor(context, colorAccent)
-                            }.lparams{
+                            }.lparams {
                                 topMargin = dip(5)
                             }
 
-                            teamFormedYear = textView{
+                            teamFormedYear = textView {
                                 this.gravity = Gravity.CENTER
                             }
 
-                            teamStadium = textView{
+                            teamStadium = textView {
                                 this.gravity = Gravity.CENTER
                                 textColor = ContextCompat.getColor(context, colorPrimaryText)
                             }
 
-                            teamDescription = textView().lparams{
+                            teamDescription = textView().lparams {
                                 topMargin = dip(20)
                             }
                         }
@@ -107,14 +109,20 @@ class TeamDetailActivity : AppCompatActivity(), TeamDetailView {
         swipeRefresh.onRefresh { presenter.getTeamDetail(id) }
     }
 
-    override fun showLoading() { progressBar.visible() }
+    override fun showLoading() {
+        progressBar.visible()
+    }
 
-    override fun hideLoading() { progressBar.invisible() }
+    override fun hideLoading() {
+        progressBar.invisible()
+    }
 
     override fun showTeamDetail(data: List<Team>) {
-        teams = Team(data[0].teamId,
+        teams = Team(
+            data[0].teamId,
             data[0].teamName,
-            data[0].teamBadge)
+            data[0].teamBadge
+        )
         swipeRefresh.isRefreshing = false
         Picasso.get().load(data[0].teamBadge).into(teamBadge)
         teamName.text = data[0].teamName
