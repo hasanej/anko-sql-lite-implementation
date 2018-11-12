@@ -1,4 +1,4 @@
-package id.hasaneljabir.footballclub.Adapter
+package id.hasaneljabir.footballclub.adapter
 
 import android.support.v7.widget.RecyclerView
 import android.view.View
@@ -8,12 +8,12 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.squareup.picasso.Picasso
 import id.hasaneljabir.footballclub.Model.Team
+import id.hasaneljabir.footballclub.R
 import id.hasaneljabir.footballclub.R.id.team_badge
 import id.hasaneljabir.footballclub.R.id.team_name
 import org.jetbrains.anko.*
-import id.hasaneljabir.footballclub.R
 
-class MainAdapter(private val teams: List<Team>): RecyclerView.Adapter<TeamViewHolder>() {
+class MainAdapter(private val teams: List<Team>) : RecyclerView.Adapter<TeamViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TeamViewHolder {
         return TeamViewHolder(
             TeamUI().createView(
@@ -29,7 +29,7 @@ class MainAdapter(private val teams: List<Team>): RecyclerView.Adapter<TeamViewH
     }
 }
 
-class TeamViewHolder(view: View) : RecyclerView.ViewHolder(view){
+class TeamViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     private val teamBadge: ImageView = view.find(team_badge)
     private val teamName: TextView = view.find(team_name)
 
@@ -49,7 +49,7 @@ class TeamUI : AnkoComponent<ViewGroup> {
 
                 imageView {
                     id = R.id.team_badge
-                }.lparams{
+                }.lparams {
                     height = dip(50)
                     width = dip(50)
                 }
@@ -57,7 +57,7 @@ class TeamUI : AnkoComponent<ViewGroup> {
                 textView {
                     id = R.id.team_name
                     textSize = 16f
-                }.lparams{
+                }.lparams {
                     margin = dip(15)
                 }
 
