@@ -1,11 +1,14 @@
 package id.hasaneljabir.footballclub.activity
 
+import android.database.sqlite.SQLiteConstraintException
 import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.AppCompatActivity
 import android.view.Gravity
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
@@ -14,7 +17,10 @@ import com.google.gson.Gson
 import com.squareup.picasso.Picasso
 import id.hasaneljabir.footballclub.R.color.colorAccent
 import id.hasaneljabir.footballclub.R.color.colorPrimaryText
+import id.hasaneljabir.footballclub.R.id.add_to_favorite
+import id.hasaneljabir.footballclub.R.menu.detail_menu
 import id.hasaneljabir.footballclub.api.ApiRepository
+import id.hasaneljabir.footballclub.databaseHelper.database
 import id.hasaneljabir.footballclub.model.Team
 import id.hasaneljabir.footballclub.presenter.TeamDetailPresenter
 import id.hasaneljabir.footballclub.utils.invisible
@@ -23,6 +29,9 @@ import id.hasaneljabir.footballclub.view.TeamDetailView
 import org.jetbrains.anko.*
 import org.jetbrains.anko.support.v4.onRefresh
 import org.jetbrains.anko.support.v4.swipeRefreshLayout
+import id.hasaneljabir.footballclub.databaseHelper.Favorite
+import org.jetbrains.anko.db.insert
+import org.jetbrains.anko.design.snackbar
 
 class TeamDetailActivity : AppCompatActivity(), TeamDetailView {
     private lateinit var progressBar: ProgressBar
@@ -37,6 +46,9 @@ class TeamDetailActivity : AppCompatActivity(), TeamDetailView {
     private lateinit var presenter: TeamDetailPresenter
     private lateinit var teams: Team
     private lateinit var id: String
+
+    private var menuItem: Menu? = null
+    private var isFavorite: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -129,5 +141,40 @@ class TeamDetailActivity : AppCompatActivity(), TeamDetailView {
         teamDescription.text = data[0].teamDescription
         teamFormedYear.text = data[0].teamFormedYear
         teamStadium.text = data[0].teamStadium
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(detail_menu, menu)
+        menuItem = menu
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                finish()
+                true
+            }
+            add_to_favorite -> {
+                addToFavorite()
+                true
+            }
+
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun addToFavorite(){
+        try {
+            database.use {
+                insert(
+                    Favorite.TABLE_FAVORITE,
+                    Favorite.TEAM_ID to teams.teamId,
+                    Favorite.TEAM_NAME to teams.teamName,
+                    Favorite.TEAM_BADGE to teams.teamBadge)
+            }
+            snackbar(swipeRefresh, "Added to favorite").show()
+        }
+        catch(e: SQLiteConstraintException){ snackbar(swipeRefresh, e.localizedMessage).show() }
     }
 }
