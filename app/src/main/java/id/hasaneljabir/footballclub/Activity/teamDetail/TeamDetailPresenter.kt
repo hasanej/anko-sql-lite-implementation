@@ -4,26 +4,27 @@ import com.google.gson.Gson
 import id.hasaneljabir.footballclub.api.ApiRepository
 import id.hasaneljabir.footballclub.api.TheSportDBApi
 import id.hasaneljabir.footballclub.model.TeamResponse
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class TeamDetailPresenter(
     private val view: TeamDetailView,
     private val apiRepository: ApiRepository,
-    private val gson: Gson) {
-
+    private val gson: Gson
+) {
     fun getTeamDetail(teamId: String) {
         view.showLoading()
-        doAsync {
-            val data = gson.fromJson(apiRepository
-                .doRequest(TheSportDBApi.getTeamDetail(teamId)),
+
+        GlobalScope.launch(Dispatchers.Main) {
+            val data = gson.fromJson(
+                apiRepository
+                    .doRequest(TheSportDBApi.getTeamDetail(teamId)).await(),
                 TeamResponse::class.java
             )
 
-            uiThread {
-                view.hideLoading()
-                view.showTeamDetail(data.teams)
-            }
+            view.showTeamDetail(data.teams)
+            view.hideLoading()
         }
     }
 }
