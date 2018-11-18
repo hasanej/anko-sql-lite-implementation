@@ -1,4 +1,4 @@
-package id.hasaneljabir.footballclub.adapter
+package id.hasaneljabir.footballclub.fragment.favoriteTeams
 
 import android.support.v7.widget.RecyclerView
 import android.view.View
@@ -11,13 +11,17 @@ import id.hasaneljabir.footballclub.R.id.team_badge
 import id.hasaneljabir.footballclub.R.id.team_name
 import id.hasaneljabir.footballclub.databaseHelper.Favorite
 import org.jetbrains.anko.*
-import org.jetbrains.anko.sdk25.coroutines.onClick
+import org.jetbrains.anko.sdk27.coroutines.onClick
 
-class FavoriteTeamsAdapter(private val favorite: List<Favorite>, private val listener: (Favorite) -> Unit)
-    : RecyclerView.Adapter<FavoriteViewHolder>() {
+class FavoriteTeamsAdapter(private val favorite: List<Favorite>, private val listener: (Favorite) -> Unit) :
+    RecyclerView.Adapter<FavoriteViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoriteViewHolder {
-        return FavoriteViewHolder(FavoriteTeamUI().createView(AnkoContext.create(parent.context, parent)))
+        return FavoriteViewHolder(
+            FavoriteTeamUI().createView(
+                AnkoContext.create(parent.context, parent)
+            )
+        )
     }
 
     override fun onBindViewHolder(holder: FavoriteViewHolder, position: Int) {
@@ -31,14 +35,14 @@ class FavoriteTeamsAdapter(private val favorite: List<Favorite>, private val lis
 class FavoriteTeamUI : AnkoComponent<ViewGroup> {
     override fun createView(ui: AnkoContext<ViewGroup>): View {
         return with(ui) {
-            linearLayout{
+            linearLayout {
                 lparams(width = matchParent, height = wrapContent)
                 padding = dip(16)
                 orientation = LinearLayout.HORIZONTAL
 
                 imageView {
                     id = team_badge
-                }.lparams{
+                }.lparams {
                     height = dip(50)
                     width = dip(50)
                 }
@@ -46,7 +50,7 @@ class FavoriteTeamUI : AnkoComponent<ViewGroup> {
                 textView {
                     id = team_name
                     textSize = 16f
-                }.lparams{
+                }.lparams {
                     margin = dip(15)
                 }
 
@@ -56,7 +60,7 @@ class FavoriteTeamUI : AnkoComponent<ViewGroup> {
 
 }
 
-class FavoriteViewHolder(view: View) : RecyclerView.ViewHolder(view){
+class FavoriteViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
     private val teamBadge: ImageView = view.find(team_badge)
     private val teamName: TextView = view.find(team_name)

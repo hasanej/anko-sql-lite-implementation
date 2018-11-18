@@ -1,4 +1,4 @@
-package id.hasaneljabir.footballclub.view
+package id.hasaneljabir.footballclub.activity.teamDetail
 
 import id.hasaneljabir.footballclub.model.Team
 

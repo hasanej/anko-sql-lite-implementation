@@ -5,8 +5,8 @@ import android.os.Bundle
 import id.hasaneljabir.footballclub.R
 import id.hasaneljabir.footballclub.R.id.favorites
 import id.hasaneljabir.footballclub.R.id.teams
-import id.hasaneljabir.footballclub.fragment.FavoriteTeamsFragment
-import id.hasaneljabir.footballclub.fragment.TeamsFragment
+import id.hasaneljabir.footballclub.fragment.favoriteTeams.FavoriteTeamsFragment
+import id.hasaneljabir.footballclub.fragment.teams.TeamsFragment
 import kotlinx.android.synthetic.main.activity_home.*
 
 class HomeActivity : AppCompatActivity() {
@@ -29,7 +29,8 @@ class HomeActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             supportFragmentManager
                 .beginTransaction()
-                .replace(R.id.main_container, TeamsFragment(), TeamsFragment::class.java.simpleName)
+                .replace(R.id.main_container,
+                    TeamsFragment(), TeamsFragment::class.java.simpleName)
                 .commit()
         }
     }
@@ -38,7 +39,8 @@ class HomeActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             supportFragmentManager
                 .beginTransaction()
-                .replace(R.id.main_container, FavoriteTeamsFragment(), FavoriteTeamsFragment::class.java.simpleName)
+                .replace(R.id.main_container,
+                    FavoriteTeamsFragment(), FavoriteTeamsFragment::class.java.simpleName)
                 .commit()
         }
     }

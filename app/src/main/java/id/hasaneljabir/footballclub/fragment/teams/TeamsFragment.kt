@@ -1,4 +1,4 @@
-package id.hasaneljabir.footballclub.fragment
+package id.hasaneljabir.footballclub.fragment.teams
 
 import android.content.Context
 import android.os.Bundle
@@ -11,20 +11,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import com.google.gson.Gson
-
 import id.hasaneljabir.footballclub.R.array.league
 import id.hasaneljabir.footballclub.R.color.colorAccent
-import id.hasaneljabir.footballclub.activity.TeamDetailActivity
-import id.hasaneljabir.footballclub.model.Team
-import id.hasaneljabir.footballclub.presenter.TeamsPresenter
-import id.hasaneljabir.footballclub.view.TeamsView
-import org.jetbrains.anko.support.v4.ctx
+import id.hasaneljabir.footballclub.activity.teamDetail.TeamDetailActivity
 import id.hasaneljabir.footballclub.api.ApiRepository
-import id.hasaneljabir.footballclub.adapter.TeamsAdapter
+import id.hasaneljabir.footballclub.model.Team
 import id.hasaneljabir.footballclub.utils.invisible
 import id.hasaneljabir.footballclub.utils.visible
 import org.jetbrains.anko.*
 import org.jetbrains.anko.recyclerview.v7.recyclerView
+import org.jetbrains.anko.support.v4.ctx
 import org.jetbrains.anko.support.v4.onRefresh
 import org.jetbrains.anko.support.v4.swipeRefreshLayout
 
@@ -43,11 +39,11 @@ class TeamsFragment : Fragment(), AnkoComponent<Context>, TeamsView {
 
 
         val spinnerItems = resources.getStringArray(league)
-        val spinnerAdapter = ArrayAdapter(ctx, android.R.layout.simple_spinner_dropdown_item, spinnerItems)
+        val spinnerAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, spinnerItems)
         spinner.adapter = spinnerAdapter
 
         adapter = TeamsAdapter(teams) {
-            ctx.startActivity<TeamDetailActivity>("id" to "${it.teamId}")
+            requireContext().startActivity<TeamDetailActivity>("id" to "${it.teamId}")
         }
         listEvent.adapter = adapter
 
@@ -67,34 +63,36 @@ class TeamsFragment : Fragment(), AnkoComponent<Context>, TeamsView {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return createView(AnkoContext.create(ctx))
+        return createView(AnkoContext.create(requireContext()))
     }
 
-    override fun createView(ui: AnkoContext<Context>): View = with(ui){
+    override fun createView(ui: AnkoContext<Context>): View = with(ui) {
         linearLayout {
-            lparams (width = matchParent, height = wrapContent)
+            lparams(width = matchParent, height = wrapContent)
             orientation = LinearLayout.VERTICAL
             topPadding = dip(16)
             leftPadding = dip(16)
             rightPadding = dip(16)
 
-            spinner = spinner ()
+            spinner = spinner()
             swipeRefresh = swipeRefreshLayout {
-                setColorSchemeResources(colorAccent,
+                setColorSchemeResources(
+                    colorAccent,
                     android.R.color.holo_green_light,
                     android.R.color.holo_orange_light,
-                    android.R.color.holo_red_light)
+                    android.R.color.holo_red_light
+                )
 
-                relativeLayout{
-                    lparams (width = matchParent, height = wrapContent)
+                relativeLayout {
+                    lparams(width = matchParent, height = wrapContent)
 
                     listEvent = recyclerView {
-                        lparams (width = matchParent, height = wrapContent)
+                        lparams(width = matchParent, height = wrapContent)
                         layoutManager = LinearLayoutManager(ctx)
                     }
 
                     progressBar = progressBar {
-                    }.lparams{
+                    }.lparams {
                         centerHorizontally()
                     }
                 }
@@ -102,9 +100,13 @@ class TeamsFragment : Fragment(), AnkoComponent<Context>, TeamsView {
         }
     }
 
-    override fun showLoading() { progressBar.visible() }
+    override fun showLoading() {
+        progressBar.visible()
+    }
 
-    override fun hideLoading() { progressBar.invisible() }
+    override fun hideLoading() {
+        progressBar.invisible()
+    }
 
     override fun showTeamList(data: List<Team>) {
         swipeRefresh.isRefreshing = false

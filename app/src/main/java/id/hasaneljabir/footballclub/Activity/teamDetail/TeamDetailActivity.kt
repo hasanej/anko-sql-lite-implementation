@@ -1,4 +1,4 @@
-package id.hasaneljabir.footballclub.activity
+package id.hasaneljabir.footballclub.activity.teamDetail
 
 import android.database.sqlite.SQLiteConstraintException
 import android.graphics.Color
@@ -13,7 +13,8 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
-
+import com.google.gson.Gson
+import com.squareup.picasso.Picasso
 import id.hasaneljabir.footballclub.R.color.colorAccent
 import id.hasaneljabir.footballclub.R.color.colorPrimaryText
 import id.hasaneljabir.footballclub.R.drawable.ic_add_to_favorites
@@ -21,15 +22,12 @@ import id.hasaneljabir.footballclub.R.drawable.ic_added_to_favorites
 import id.hasaneljabir.footballclub.R.id.add_to_favorite
 import id.hasaneljabir.footballclub.R.menu.detail_menu
 import id.hasaneljabir.footballclub.api.ApiRepository
+import id.hasaneljabir.footballclub.R
 import id.hasaneljabir.footballclub.databaseHelper.Favorite
 import id.hasaneljabir.footballclub.databaseHelper.database
 import id.hasaneljabir.footballclub.model.Team
 import id.hasaneljabir.footballclub.utils.invisible
 import id.hasaneljabir.footballclub.utils.visible
-import com.google.gson.Gson
-import com.squareup.picasso.Picasso
-import id.hasaneljabir.footballclub.presenter.TeamDetailPresenter
-import id.hasaneljabir.footballclub.view.TeamDetailView
 import org.jetbrains.anko.*
 import org.jetbrains.anko.db.classParser
 import org.jetbrains.anko.db.delete
@@ -69,42 +67,44 @@ class TeamDetailActivity : AppCompatActivity(), TeamDetailView {
             backgroundColor = Color.WHITE
 
             swipeRefresh = swipeRefreshLayout {
-                setColorSchemeResources(colorAccent,
+                setColorSchemeResources(
+                    colorAccent,
                     android.R.color.holo_green_light,
                     android.R.color.holo_orange_light,
-                    android.R.color.holo_red_light)
+                    android.R.color.holo_red_light
+                )
 
                 scrollView {
                     isVerticalScrollBarEnabled = false
                     relativeLayout {
                         lparams(width = matchParent, height = wrapContent)
 
-                        linearLayout{
+                        linearLayout {
                             lparams(width = matchParent, height = wrapContent)
                             padding = dip(10)
                             orientation = LinearLayout.VERTICAL
                             gravity = Gravity.CENTER_HORIZONTAL
 
-                            teamBadge =  imageView {}.lparams(height = dip(75))
+                            teamBadge = imageView {}.lparams(height = dip(75))
 
-                            teamName = textView{
+                            teamName = textView {
                                 this.gravity = Gravity.CENTER
                                 textSize = 20f
                                 textColor = ContextCompat.getColor(context, colorAccent)
-                            }.lparams{
+                            }.lparams {
                                 topMargin = dip(5)
                             }
 
-                            teamFormedYear = textView{
+                            teamFormedYear = textView {
                                 this.gravity = Gravity.CENTER
                             }
 
-                            teamStadium = textView{
+                            teamStadium = textView {
                                 this.gravity = Gravity.CENTER
                                 textColor = ContextCompat.getColor(context, colorPrimaryText)
                             }
 
-                            teamDescription = textView().lparams{
+                            teamDescription = textView().lparams {
                                 topMargin = dip(20)
                             }
                         }
@@ -128,24 +128,32 @@ class TeamDetailActivity : AppCompatActivity(), TeamDetailView {
         }
     }
 
-    private fun favoriteState(){
+    private fun favoriteState() {
         database.use {
             val result = select(Favorite.TABLE_FAVORITE)
-                .whereArgs("(TEAM_ID = {id})",
-                    "id" to id)
+                .whereArgs(
+                    "(TEAM_ID = {id})",
+                    "id" to id
+                )
             val favorite = result.parseList(classParser<Favorite>())
             if (!favorite.isEmpty()) isFavorite = true
         }
     }
 
-    override fun showLoading() { progressBar.visible() }
+    override fun showLoading() {
+        progressBar.visible()
+    }
 
-    override fun hideLoading() { progressBar.invisible() }
+    override fun hideLoading() {
+        progressBar.invisible()
+    }
 
     override fun showTeamDetail(data: List<Team>) {
-        teams = Team(data[0].teamId,
+        teams = Team(
+            data[0].teamId,
             data[0].teamName,
-            data[0].teamBadge)
+            data[0].teamBadge
+        )
         swipeRefresh.isRefreshing = false
         Picasso.get().load(data[0].teamBadge).into(teamBadge)
         teamName.text = data[0].teamName
@@ -181,28 +189,34 @@ class TeamDetailActivity : AppCompatActivity(), TeamDetailView {
         }
     }
 
-    private fun addToFavorite(){
+    private fun addToFavorite() {
         try {
             database.use {
-                insert(Favorite.TABLE_FAVORITE,
+                insert(
+                    Favorite.TABLE_FAVORITE,
                     Favorite.TEAM_ID to teams.teamId,
                     Favorite.TEAM_NAME to teams.teamName,
-                    Favorite.TEAM_BADGE to teams.teamBadge)
+                    Favorite.TEAM_BADGE to teams.teamBadge
+                )
             }
-            snackbar(swipeRefresh, "Added to favorite").show()
+            swipeRefresh.snackbar(R.string.added_to_favorite).show()
+        } catch (e: SQLiteConstraintException) {
+            swipeRefresh.snackbar(e.localizedMessage).show()
         }
-        catch (e: SQLiteConstraintException){ snackbar(swipeRefresh, e.localizedMessage).show() }
     }
 
-    private fun removeFromFavorite(){
+    private fun removeFromFavorite() {
         try {
             database.use {
-                delete(Favorite.TABLE_FAVORITE, "(TEAM_ID = {id})",
-                    "id" to id)
+                delete(
+                    Favorite.TABLE_FAVORITE, "(TEAM_ID = {id})",
+                    "id" to id
+                )
             }
-            snackbar(swipeRefresh, "Removed from favorite").show()
+            swipeRefresh.snackbar(R.string.removed_from_favorite).show()
+        } catch (e: SQLiteConstraintException) {
+            swipeRefresh.snackbar(e.localizedMessage).show()
         }
-        catch(e: SQLiteConstraintException){ snackbar(swipeRefresh, e.localizedMessage).show() }
     }
 
     private fun setFavorite() {

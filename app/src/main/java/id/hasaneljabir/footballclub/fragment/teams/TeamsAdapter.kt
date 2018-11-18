@@ -1,4 +1,4 @@
-package id.hasaneljabir.footballclub.adapter
+package id.hasaneljabir.footballclub.fragment.teams
 
 import android.support.v7.widget.RecyclerView
 import android.view.View
@@ -7,14 +7,15 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.squareup.picasso.Picasso
-import id.hasaneljabir.footballclub.model.Team
 import id.hasaneljabir.footballclub.R
 import id.hasaneljabir.footballclub.R.id.team_badge
 import id.hasaneljabir.footballclub.R.id.team_name
+import id.hasaneljabir.footballclub.model.Team
 import org.jetbrains.anko.*
-import org.jetbrains.anko.sdk25.coroutines.onClick
+import org.jetbrains.anko.sdk27.coroutines.onClick
 
-class TeamsAdapter(private val teams: List<Team>, private val listener: (Team) -> Unit) : RecyclerView.Adapter<TeamViewHolder>() {
+class TeamsAdapter(private val teams: List<Team>, private val listener: (Team) -> Unit) :
+    RecyclerView.Adapter<TeamViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TeamViewHolder {
         return TeamViewHolder(
             TeamUI().createView(

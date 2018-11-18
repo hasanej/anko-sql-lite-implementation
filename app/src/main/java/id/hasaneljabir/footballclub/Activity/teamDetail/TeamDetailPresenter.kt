@@ -1,10 +1,9 @@
-package id.hasaneljabir.footballclub.presenter
+package id.hasaneljabir.footballclub.activity.teamDetail
 
 import com.google.gson.Gson
 import id.hasaneljabir.footballclub.api.ApiRepository
 import id.hasaneljabir.footballclub.api.TheSportDBApi
 import id.hasaneljabir.footballclub.model.TeamResponse
-import id.hasaneljabir.footballclub.view.TeamDetailView
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 

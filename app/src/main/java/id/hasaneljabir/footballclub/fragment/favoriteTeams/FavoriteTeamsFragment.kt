@@ -1,4 +1,4 @@
-package id.hasaneljabir.footballclub.fragment
+package id.hasaneljabir.footballclub.fragment.favoriteTeams
 
 import android.content.Context
 import android.os.Bundle
@@ -11,8 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 
 import id.hasaneljabir.footballclub.R.color.colorAccent
-import id.hasaneljabir.footballclub.activity.TeamDetailActivity
-import id.hasaneljabir.footballclub.adapter.FavoriteTeamsAdapter
+import id.hasaneljabir.footballclub.activity.teamDetail.TeamDetailActivity
 import id.hasaneljabir.footballclub.databaseHelper.Favorite
 import id.hasaneljabir.footballclub.databaseHelper.database
 import org.jetbrains.anko.*
@@ -32,8 +31,8 @@ class FavoriteTeamsFragment : Fragment(), AnkoComponent<Context> {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        adapter = FavoriteTeamsAdapter(favorites){
-            ctx.startActivity<TeamDetailActivity>("id" to "${it.teamId}")
+        adapter = FavoriteTeamsAdapter(favorites) {
+            requireContext().startActivity<TeamDetailActivity>("id" to "${it.teamId}")
         }
 
         listEvent.adapter = adapter
@@ -47,7 +46,7 @@ class FavoriteTeamsFragment : Fragment(), AnkoComponent<Context> {
         showFavorite()
     }
 
-    private fun showFavorite(){
+    private fun showFavorite() {
         favorites.clear()
         context?.database?.use {
             swipeRefresh.isRefreshing = false
@@ -59,24 +58,26 @@ class FavoriteTeamsFragment : Fragment(), AnkoComponent<Context> {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return createView(AnkoContext.create(ctx))
+        return createView(AnkoContext.create(requireContext()))
     }
 
-    override fun createView(ui: AnkoContext<Context>): View = with(ui){
+    override fun createView(ui: AnkoContext<Context>): View = with(ui) {
         linearLayout {
-            lparams (width = matchParent, height = wrapContent)
+            lparams(width = matchParent, height = wrapContent)
             topPadding = dip(16)
             leftPadding = dip(16)
             rightPadding = dip(16)
 
             swipeRefresh = swipeRefreshLayout {
-                setColorSchemeResources(colorAccent,
+                setColorSchemeResources(
+                    colorAccent,
                     android.R.color.holo_green_light,
                     android.R.color.holo_orange_light,
-                    android.R.color.holo_red_light)
+                    android.R.color.holo_red_light
+                )
 
                 listEvent = recyclerView {
-                    lparams (width = matchParent, height = wrapContent)
+                    lparams(width = matchParent, height = wrapContent)
                     layoutManager = LinearLayoutManager(ctx)
                 }
             }
